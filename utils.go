@@ -41,6 +41,8 @@ func GetCurrentPath() string {
 	return currentPath
 }
 
+
+
 func GetLocalIP() string {
 	addrs, err := net.InterfaceAddrs()
 	if err != nil {
