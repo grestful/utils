@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"net"
 	"net/http"
+	"os"
 	"strconv"
 	"strings"
 )
@@ -35,7 +36,10 @@ func GetRequestKey(r *http.Request, key string) string {
 	return keys[0]
 }
 
-
+func GetCurrentPath() string {
+	currentPath, _ := os.Getwd()
+	return currentPath
+}
 
 func GetLocalIP() string {
 	addrs, err := net.InterfaceAddrs()
