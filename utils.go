@@ -3,11 +3,13 @@ package utils
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"net"
 	"net/http"
 	"os"
 	"strconv"
 	"strings"
+	"unicode/utf8"
 )
 
 func Marshal(v interface{}) ([]byte, error) {
@@ -154,4 +156,33 @@ func B2S(bs []uint8) string {
 		ba = append(ba, byte(b))
 	}
 	return string(ba)
+}
+
+func Utf8SubStr(str string, start, length int) (string, error){
+	l := utf8.RuneCountInString(str)
+	if l == 0 {
+		return "", errors.New("Str is empty! ")
+	}
+
+	if start < 0 {
+		start = l + start
+	}
+
+	if (start + length) > l {
+		return str, errors.New("Str length is less than start+length! ")
+	}
+	sb := new(strings.Builder)
+	var pos = 0
+	for _, c := range str {
+		if pos >= start {
+			if pos >= start+length {
+				break
+			}
+			sb.WriteRune(c)
+
+		}
+		pos++
+	}
+
+	return sb.String(), nil
 }
