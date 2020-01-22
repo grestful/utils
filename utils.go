@@ -42,12 +42,12 @@ func GetCurrentPath() string {
 }
 
 func GetLocalIP() string {
-	addrs, err := net.InterfaceAddrs()
+	addresses, err := net.InterfaceAddrs()
 	if err != nil {
 		return ""
 	}
 
-	for _, address := range addrs {
+	for _, address := range addresses {
 		// 检查ip地址判断是否回环地址
 		if ipnet, ok := address.(*net.IPNet); ok && !ipnet.IP.IsLoopback() {
 			if ipnet.IP.To4() != nil {
@@ -63,6 +63,7 @@ func IPStringToInt(ipString string) int {
 	ipSegs := strings.Split(ipString, ".")
 	var ipInt int = 0
 	var pos uint = 24
+
 	for _, ipSeg := range ipSegs {
 		tempInt, _ := strconv.Atoi(ipSeg)
 		tempInt = tempInt << pos
