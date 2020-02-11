@@ -106,10 +106,10 @@ func Utf8SubStr(str string, start, length int) (string, error) {
 				break
 			}
 			sb.WriteRune(c)
-
 		}
 		pos++
 	}
 
 	return sb.String(), nil
 }
+
