@@ -20,20 +20,7 @@ func Marshal(v interface{}) ([]byte, error) {
 
 //获取参数，不支持keys 0
 func GetRequestKey(r *http.Request, key string) string {
-	keys, ok := r.URL.Query()[key]
-
-	if !ok || len(keys) < 1 {
-		c, err := r.Cookie(key)
-		if err != nil {
-			return ""
-		}
-
-		return c.Value
-	}
-
-	// Query()["key"] will return an array of items,
-	// we only want the single item.
-	return keys[0]
+	return r.URL.Query().Get(key)
 }
 
 func GetCurrentPath() string {
