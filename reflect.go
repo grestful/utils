@@ -1,6 +1,8 @@
 package utils
 
 import (
+	"github.com/danhper/structomap"
+	"github.com/mitchellh/mapstructure"
 	"reflect"
 )
 
@@ -51,4 +53,17 @@ func StructSetFieldValue(v interface{}, key string, value interface{}) bool {
 	}
 
 	return false
+}
+
+func Struct2Map(obj interface{}) map[string]interface{} {
+	return structomap.New().UseCamelCase().Transform(obj)
+}
+
+func Struct2MapList(obj interface{}) ([]map[string]interface{}, error) {
+	return structomap.New().UseCamelCase().TransformArray(obj)
+}
+
+//obj must use *point
+func Map2Struct(m map[string]interface{}, obj interface{}) error {
+	return mapstructure.Decode(m, obj)
 }
