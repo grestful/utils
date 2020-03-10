@@ -5,6 +5,10 @@ type MapReader struct {
 	value map[string]interface{}
 }
 
+func (m *MapReader) GetValue() map[string]interface{} {
+	return m.value
+}
+
 func NewMapperReader(m map[string]interface{}) *MapReader {
 	return &MapReader{value:m}
 }
