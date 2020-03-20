@@ -16,5 +16,3 @@ func StringToBytes(s string) []byte {
 		}{s, len(s)},
 	))
 }
-
-

@@ -112,4 +112,3 @@ func Utf8SubStr(str string, start, length int) (string, error) {
 
 	return sb.String(), nil
 }
-
