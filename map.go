@@ -14,8 +14,8 @@ func NewMapperReader(m map[string]interface{}) *MapReader {
 
 func (m *MapReader) ReadWithString(key string, defaultVal string) string {
 	if m.exists(key) {
-		if v, ok := m.value[key].(string); ok {
-			return v
+		if v, ok := m.value[key]; ok {
+			return BasicTypeToString(v)
 		}
 	}
 	return defaultVal
@@ -24,7 +24,8 @@ func (m *MapReader) ReadWithString(key string, defaultVal string) string {
 func (m *MapReader) ReadWithInt64(key string, defaultVal int64) int64 {
 	if m.exists(key) {
 		if v, ok := m.value[key].(int64); ok {
-			return v
+			return BasicTypeToInt64(v)
+
 		}
 	}
 	return defaultVal
@@ -33,7 +34,7 @@ func (m *MapReader) ReadWithInt64(key string, defaultVal int64) int64 {
 func (m *MapReader) ReadWithUint64(key string, defaultVal uint64) uint64 {
 	if m.exists(key) {
 		if v, ok := m.value[key].(uint64); ok {
-			return v
+			return uint64(BasicTypeToInt64(v))
 		}
 	}
 	return defaultVal
@@ -42,7 +43,7 @@ func (m *MapReader) ReadWithUint64(key string, defaultVal uint64) uint64 {
 func (m *MapReader) ReadWithInt(key string, defaultVal int) int {
 	if m.exists(key) {
 		if v, ok := m.value[key].(int); ok {
-			return v
+			return int(BasicTypeToInt64(v))
 		}
 	}
 	return defaultVal
@@ -51,7 +52,7 @@ func (m *MapReader) ReadWithInt(key string, defaultVal int) int {
 func (m *MapReader) ReadWithUint8(key string, defaultVal uint8) uint8 {
 	if m.exists(key) {
 		if v, ok := m.value[key].(uint8); ok {
-			return v
+			return uint8(BasicTypeToInt64(v))
 		}
 	}
 	return defaultVal
@@ -60,7 +61,7 @@ func (m *MapReader) ReadWithUint8(key string, defaultVal uint8) uint8 {
 func (m *MapReader) ReadWithUint(key string, defaultVal uint) uint {
 	if m.exists(key) {
 		if v, ok := m.value[key].(uint); ok {
-			return v
+			return uint(BasicTypeToInt64(v))
 		}
 	}
 	return defaultVal
@@ -68,8 +69,8 @@ func (m *MapReader) ReadWithUint(key string, defaultVal uint) uint {
 
 func (m *MapReader) ReadWithInt8(key string, defaultVal int8) int8 {
 	if m.exists(key) {
-		if v, ok := m.value[key].(int8); ok {
-			return v
+		if v, ok := m.value[key]; ok {
+			return int8(BasicTypeToInt64(v))
 		}
 	}
 	return defaultVal
@@ -77,8 +78,8 @@ func (m *MapReader) ReadWithInt8(key string, defaultVal int8) int8 {
 
 func (m *MapReader) ReadWithUint16(key string, defaultVal uint16) uint16 {
 	if m.exists(key) {
-		if v, ok := m.value[key].(uint16); ok {
-			return v
+		if v, ok := m.value[key]; ok {
+			return uint16(BasicTypeToInt64(v))
 		}
 	}
 	return defaultVal
@@ -86,8 +87,8 @@ func (m *MapReader) ReadWithUint16(key string, defaultVal uint16) uint16 {
 
 func (m *MapReader) ReadWithInt32(key string, defaultVal int32) int32 {
 	if m.exists(key) {
-		if v, ok := m.value[key].(int32); ok {
-			return v
+		if v, ok := m.value[key]; ok {
+			return int32(BasicTypeToInt64(v))
 		}
 	}
 	return defaultVal
@@ -95,8 +96,13 @@ func (m *MapReader) ReadWithInt32(key string, defaultVal int32) int32 {
 
 func (m *MapReader) ReadWithBool(key string, defaultVal bool) bool {
 	if m.exists(key) {
-		if v, ok := m.value[key].(bool); ok {
-			return v
+		if v, ok := m.value[key]; ok {
+			switch v.(type) {
+				case bool:
+					return v.(bool)
+				default:
+					return BasicTypeToInt64(v) > 0
+			}
 		}
 	}
 	return defaultVal

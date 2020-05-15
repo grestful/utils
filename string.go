@@ -10,7 +10,7 @@ import (
 // 转换默认值
 func String2Int(s string, defaultVal int) int {
 	a, err := strconv.Atoi(s)
-	if err != nil {
+	if err != nil  {
 		return defaultVal
 	}
 
@@ -112,3 +112,5 @@ func Utf8SubStr(str string, start, length int) (string, error) {
 
 	return sb.String(), nil
 }
+
+
