@@ -1,6 +1,11 @@
 package utils
 
-import "strconv"
+import (
+	"bytes"
+	"encoding/json"
+	"errors"
+	"strconv"
+)
 
 // Itoa converts an interface to a string.
 func BasicTypeToString(value interface{}) (s string) {
@@ -33,6 +38,10 @@ func BasicTypeToString(value interface{}) (s string) {
 		} else {
 			s =  "false"
 		}
+	case json.Delim:
+		s = value.(json.Delim).String()
+	case json.Number:
+		s =  value.(json.Number).String()
 	case string:
 		s =  t
 	default:
@@ -73,6 +82,10 @@ func BasicTypeToInt64(value interface{}) (i int64) {
 		} else {
 			i = 0
 		}
+	case json.Delim:
+		i,_ = strconv.ParseInt(value.(json.Delim).String(), 10,64)
+	case json.Number:
+		i,_ =  value.(json.Number).Int64()
 	case string:
 		i,_ = strconv.ParseInt(value.(string), 10, 64)
 	default:
@@ -80,4 +93,17 @@ func BasicTypeToInt64(value interface{}) (i int64) {
 	}
 
 	return i
+}
+
+
+func UnmarshalNumber(bt []byte, v interface{}) error {
+	if len(bt) == 0 {
+		return errors.New("bt is nil")
+	}
+	d := json.NewDecoder(bytes.NewReader(bt))
+	d.UseNumber()
+	if err := d.Decode(v); err != nil {
+		return err
+	}
+	return nil
 }
