@@ -1,8 +1,10 @@
 package utils
 
 import (
+	"encoding/json"
 	"fmt"
 	"golang.org/x/tools/container/intsets"
+	"reflect"
 	"testing"
 	"time"
 	"unsafe"
@@ -40,4 +42,23 @@ func TestMaxIntToInt(t *testing.T)  {
 	fmt.Println(i)
 	fmt.Println(int32(i))
 	fmt.Println(*(*int32)(unsafe.Pointer(&i)))
+}
+
+
+func TestUnmarshalNumber(t *testing.T)  {
+	type Num struct {
+		I int64 `json:"i"`
+	}
+
+	n := map[string]interface{}{
+		"i":8102055647965417472,
+	}
+	//n := &Num{I:8102055647965417472}
+	v,_ := json.Marshal(n)
+
+	n1 := &Num{}
+	UnmarshalNumber(v, n1)
+	fmt.Println(reflect.TypeOf(n1.I).String())
+	fmt.Println(n1.I)
+
 }
