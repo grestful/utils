@@ -3,6 +3,7 @@ package utils
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"net"
 	"net/http"
 	"os"
@@ -16,6 +17,18 @@ func Marshal(v interface{}) ([]byte, error) {
 	encoder.SetEscapeHTML(false)
 	err := encoder.Encode(v)
 	return buff.Bytes(), err
+}
+
+func UnmarshalNumber(bt []byte, v interface{}) error {
+	if len(bt) == 0 {
+		return errors.New("bt is nil")
+	}
+	d := json.NewDecoder(bytes.NewReader(bt))
+	d.UseNumber()
+	if err := d.Decode(v); err != nil {
+		return err
+	}
+	return nil
 }
 
 //获取参数，不支持keys 0

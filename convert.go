@@ -1,9 +1,7 @@
 package utils
 
 import (
-	"bytes"
 	"encoding/json"
-	"errors"
 	"strconv"
 )
 
@@ -96,14 +94,3 @@ func BasicTypeToInt64(value interface{}) (i int64) {
 }
 
 
-func UnmarshalNumber(bt []byte, v interface{}) error {
-	if len(bt) == 0 {
-		return errors.New("bt is nil")
-	}
-	d := json.NewDecoder(bytes.NewReader(bt))
-	d.UseNumber()
-	if err := d.Decode(v); err != nil {
-		return err
-	}
-	return nil
-}
