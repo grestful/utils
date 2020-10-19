@@ -1,10 +1,16 @@
 package utils
 
 import (
+	"bytes"
+	"crypto/md5"
+	"encoding/base64"
+	"encoding/hex"
 	"errors"
+	"math/rand"
 	"regexp"
 	"strconv"
 	"strings"
+	"time"
 	"unicode/utf8"
 )
 
@@ -193,4 +199,124 @@ func IsValidPhoneNum(phone string) bool {
 	} else {
 		return false
 	}
+}
+
+func compareStrings(v1 []string, v2 []string) int {
+	//v1 短
+	flag := 0
+	for i, v := range v1 {
+		v1int := String2Int(v, 0)
+		v2int := String2Int(v2[i], 0)
+		if v2int > v1int {
+			flag = -1
+			break
+		}
+		if v2int < v1int {
+			flag = 1
+			break
+		}
+	}
+
+	if flag == 0 && len(v2) > len(v1) {
+		flag = -1
+	}
+
+	return flag
+}
+
+func CompareVersion(v1, v2 string) int {
+	ver1 := strings.Split(v1, ".")
+	ver2 := strings.Split(v2, ".")
+	// 找出v1和v2哪一个最短
+	var res int
+	if len(ver1) > len(ver2) {
+
+		res = compareStrings(ver2, ver1)
+		if res != 0 {
+			res = res * -1
+		}
+	} else {
+		res = compareStrings(ver1, ver2)
+	}
+	return res
+}
+
+// 拼接字符串
+func JoinString(s []string, d string) string {
+	if len(s) <= 0 {
+		return ""
+	}
+
+	var buffer bytes.Buffer
+	buffer.WriteString(s[0])
+	for i := 1; i < len(s); i++ {
+		buffer.WriteString(d)
+		buffer.WriteString(s[i])
+	}
+
+	return buffer.String()
+}
+
+// 分割字符串
+func SplitString(s string, d string) []string {
+	return strings.Split(s, d)
+}
+
+// 加盐的字符处理为md5
+func EncodeMd5(s string, salt string) string {
+	h := md5.New()
+	h.Write([]byte(s + salt))
+	return hex.EncodeToString(h.Sum(nil))
+}
+
+// base64编码 1 - 表示字符串，2 - 表示uri
+func Base64Encode(input string, typ int8) string {
+	switch typ {
+	case 1:
+		return base64.StdEncoding.EncodeToString([]byte(input))
+	case 2:
+		return base64.URLEncoding.EncodeToString([]byte(input))
+	}
+
+	return ""
+}
+
+// base64编码 1 - 表示字符串，2 - 表示uri
+func Base64Decode(input string, typ int8) (string, error) {
+	switch typ {
+	case 1:
+		v, err := base64.StdEncoding.DecodeString(input)
+		return string(v), err
+	case 2:
+		v, err := base64.URLEncoding.DecodeString(input)
+		return string(v), err
+	}
+
+	return "", nil
+}
+
+// 获取随机字符串
+func GetRandomString(cnum int) string {
+	str := "0123456789abcdefghijklmnopqrstuvwxyz"
+	bs := []byte(str)
+	var result []byte
+	r := rand.New(rand.NewSource(time.Now().UnixNano()))
+	for i := 0; i < cnum; i++ {
+		result = append(result, bs[r.Intn(len(bs))])
+	}
+
+	return string(result)
+}
+
+// 获取数字字符串
+func GetRandomNumString(cnum int) string {
+	str := "0123456789"
+	bs := []byte(str)
+	var result []byte
+	r := rand.New(rand.NewSource(time.Now().UnixNano()))
+	for i := 0; i < cnum; i++ {
+		result = append(result, bs[r.Intn(len(bs))])
+	}
+
+	return string(result)
 }

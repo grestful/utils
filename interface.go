@@ -92,3 +92,49 @@ func Interface2String(value interface{}) (s string) {
 
 	return s
 }
+
+
+// interface => int
+func Interface2Int(value interface{}) (s int) {
+	switch t := value.(type) {
+	case nil:
+		s = 0
+	case int8:
+		s = int(value.(int8))
+	case uint8:
+		s = int(value.(uint8))
+	case int:
+		s = value.(int)
+	case uint:
+		s = int(value.(uint))
+	case int64:
+		s = int(value.(int64))
+	case uint64:
+		s = int(value.(uint64))
+	case int32:
+		s = int(value.(int32))
+	case uint32:
+		s = int(value.(uint32))
+	case float64:
+		s = int(value.(float64))
+	case float32:
+		s = int(value.(float32))
+	case bool:
+		if t {
+			s = 1
+		} else {
+			s = 0
+		}
+	case string:
+		s = String2Int(t, 0)
+	case json.Number:
+		i64, _ := t.Int64()
+		s = int(i64)
+	case json.Delim:
+		s = String2Int(t.String(), 0)
+	default:
+		s = 0
+	}
+
+	return s
+}
