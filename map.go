@@ -138,3 +138,59 @@ func (m *MapReader) exists(key string) bool {
 
 	return ok
 }
+
+/**
+任意map类型全部转为string，包含key、value，接口中常用
+ */
+func MapInterfaceToMapString(mp map[string]interface{}) (res map[string]interface{}) {
+	if len(mp) == 0 {
+		return nil
+	}
+	res = make(map[string]interface{})
+	for k, v := range mp {
+		res[k] = anyTypeToString(v)
+	}
+	return res
+}
+
+func anyTypeToString(v interface{}) interface{} {
+	var res interface{}
+	switch v.(type) {
+	//case types.Slice:
+	case []interface{}:
+		sl := make([]interface{}, 0)
+		for _, v1 := range v.([]interface{}) {
+			sl = append(sl, anyTypeToString(v1))
+		}
+		res = sl
+	case map[string]interface{}:
+		mp := make(map[string]interface{})
+		for k, v := range v.(map[string]interface{}) {
+			mp[k] = anyTypeToString(v)
+		}
+		res = mp
+	case map[int64]interface{}:
+		mp := make(map[string]interface{})
+		for k, v := range v.(map[int64]interface{}) {
+			mp[Int642String(k)] = anyTypeToString(v)
+		}
+		res = mp
+	case map[int]interface{}:
+		mp := make(map[string]interface{})
+		for k, v := range v.(map[int]interface{}) {
+			mp[Int2String(k)] = anyTypeToString(v)
+		}
+		res = mp
+	case map[float64]interface{}:
+		mp := make(map[string]interface{})
+		for k, v := range v.(map[float64]interface{}) {
+			mp[Float2String(k)] = anyTypeToString(v)
+		}
+		res = mp
+	case string:
+		res = v.(string)
+	default:
+		res = Interface2String(v)
+	}
+	return res
+}
